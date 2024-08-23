@@ -664,6 +664,7 @@ dependencies = [
 [[package]]
 name = "bn254"
 version = "0.1.0"
+source = "git+https://github.com/scroll-tech/bn254#1773ed6c51f14652272056370cf135ff5d7a01c5"
 dependencies = [
  "ff 0.13.0 (git+https://github.com/scroll-tech/ff?branch=feat/sp1)",
  "getrandom",
@@ -3418,13 +3419,14 @@ name = "poseidon-bn254"
 version = "0.1.0"
 dependencies = [
  "bn254",
- "ff 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "itertools 0.13.0",
 ]
 
 [[package]]
 name = "poseidon-test-program"
 version = "0.1.0"
 dependencies = [
+ "itertools 0.13.0",
  "poseidon-bn254",
  "sp1-lib",
  "sp1-zkvm",
@@ -3650,9 +3652,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.36"
+version = "1.0.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0fa76aaf39101c457836aec0ce2316dbdc3ab723cdda1c6bd4e6ad4208acaca7"
+checksum = "b5b9d34b8991d19d98081b46eacdd8eb58c6f2b201139f7c5f643cc155a633af"
 dependencies = [
  "proc-macro2",
 ]
@@ -3866,7 +3868,7 @@ dependencies = [
  "serde_json",
  "serde_urlencoded",
  "sync_wrapper 1.0.1",
- "system-configuration 0.6.0",
+ "system-configuration 0.6.1",
  "tokio",
  "tokio-native-tls",
  "tokio-rustls",
@@ -5046,9 +5048,9 @@ dependencies = [
 
 [[package]]
 name = "system-configuration"
-version = "0.6.0"
+version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "658bc6ee10a9b4fcf576e9b0819d95ec16f4d2c02d39fd83ac1c8789785c4a42"
+checksum = "3c879d448e9d986b661742763247d3693ed13609438cf3d006f51f5368a5ba6b"
 dependencies = [
  "bitflags 2.6.0",
  "core-foundation",

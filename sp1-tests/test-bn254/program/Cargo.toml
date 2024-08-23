@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+itertools.workspace = true
 poseidon-bn254.workspace = true
 sp1-zkvm.workspace = true
 sp1-lib.workspace = true

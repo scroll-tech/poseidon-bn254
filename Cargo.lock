@@ -93,6 +93,7 @@ dependencies = [
 [[package]]
 name = "bn254"
 version = "0.1.0"
+source = "git+https://github.com/scroll-tech/bn254#968936395106cb609832894c69d127ee7c93ad4a"
 dependencies = [
  "ff 0.13.0 (git+https://github.com/scroll-tech/ff?branch=feat/sp1)",
  "getrandom",

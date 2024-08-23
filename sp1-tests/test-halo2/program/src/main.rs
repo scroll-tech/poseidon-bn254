@@ -2,12 +2,12 @@
 
 sp1_zkvm::entrypoint!(main);
 
+use ethers_core::k256::elliptic_curve::PrimeField;
+use ethers_core::types::U256;
 use itertools::iproduct;
 use poseidon_base::hash::{Hashable, MessageHashable};
 use poseidon_bn254::Fr;
 use std::array;
-use ethers_core::k256::elliptic_curve::PrimeField;
-use ethers_core::types::U256;
 
 fn main() {
     Fr::hash_with_domain([Fr::zero(), Fr::zero()], Fr::zero()); // init poseidon base
@@ -16,9 +16,13 @@ fn main() {
     hash_with_domain(&[Fr::zero(), Fr::zero()], Fr::zero());
     println!("cycle-tracker-end: hash_with_domain(&[Fr::zero(), Fr::zero()], Fr::zero())");
 
-    println!("cycle-tracker-start: hash_with_domain(&[Fr::from(1u64), Fr::from(2u64)], Fr::from(3u64))");
+    println!(
+        "cycle-tracker-start: hash_with_domain(&[Fr::from(1u64), Fr::from(2u64)], Fr::from(3u64))"
+    );
     hash_with_domain(&[Fr::from(1u64), Fr::from(2u64)], Fr::from(3u64));
-    println!("cycle-tracker-end: hash_with_domain(&[Fr::from(1u64), Fr::from(2u64)], Fr::from(3u64))");
+    println!(
+        "cycle-tracker-end: hash_with_domain(&[Fr::from(1u64), Fr::from(2u64)], Fr::from(3u64))"
+    );
 
     let msgs = [
         &array::from_fn::<_, 1, _>(|i| Fr::from(i as u64))[..],
@@ -61,7 +65,6 @@ fn main() {
         assert_eq!(result, expected);
         println!("{}", format!("cycle-tracker-end: {tag}"));
     }
-
 }
 
 fn hash_with_domain(inp: &[Fr; 2], domain: Fr) {
@@ -111,7 +114,6 @@ fn hash_code_poseidon(code: &[u8]) -> [u8; 32] {
             Some(Fr::from_bytes(&buf).unwrap())
         })
         .collect();
-
 
     let h = if msgs.is_empty() {
         // the empty code hash is overlapped with simple hash on [0, 0]
