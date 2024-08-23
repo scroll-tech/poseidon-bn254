@@ -5,13 +5,18 @@ use std::ops::{AddAssign, MulAssign};
 #[cfg(not(all(target_os = "zkvm", target_vendor = "succinct")))]
 mod host;
 #[cfg(not(all(target_os = "zkvm", target_vendor = "succinct")))]
-use host::{fill_state, sbox_inplace, set_state};
+pub(crate) use host::{
+    fill_state, init_state_with_cap_and_msg, mul_add_assign, sbox_inplace, set_fr, set_state,
+};
 
 #[cfg(all(target_os = "zkvm", target_vendor = "succinct"))]
 mod sp1;
 #[cfg(all(target_os = "zkvm", target_vendor = "succinct"))]
-use sp1::{fill_state, sbox_inplace, set_state};
+pub(crate) use sp1::{
+    fill_state, init_state_with_cap_and_msg, mul_add_assign, sbox_inplace, set_fr, set_state,
+};
 
+#[inline(always)]
 pub fn permute(state: &mut State) {
     const R_F: usize = FULL_ROUNDS / 2;
     const R_P: usize = PARTIAL_ROUNDS;
@@ -27,7 +32,7 @@ pub fn permute(state: &mut State) {
         for i in 0..T {
             new_state[i].mul_assign(&MDS[i][0]);
             for j in 1..T {
-                new_state[i] += &state[j] * &MDS[i][j];
+                mul_add_assign(&mut new_state[i], &state[j], &MDS[i][j]);
             }
         }
 

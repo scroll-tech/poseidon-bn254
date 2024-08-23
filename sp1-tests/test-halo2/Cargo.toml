@@ -6,7 +6,9 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
+ethers-core = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "v2.0.7" }
 halo2curves = { git = "https://github.com/scroll-tech/halo2curves.git", branch = "feat/sp1" }
+itertools = "0.13"
 poseidon-base = { git = "https://github.com/scroll-tech/poseidon-circuit", branch = "feat/sp1" }
 poseidon-bn254 = { path = "../..", features = ["halo2curves_v3"] }
 
