@@ -22,4 +22,5 @@ a computational only implementation of the Poseidon hash using in
 | hash_code(24576) **           |             2,743,359 |               2,985,843 | 242,484 (-8.1%) |
 
 &ast;`hash_with_domain([0, 0], 0)` is the hash of the empty message.
+
 ** 24576 is the maximum bytecode size limit on ethereum mainnet.
