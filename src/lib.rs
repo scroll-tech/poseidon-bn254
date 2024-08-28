@@ -7,11 +7,11 @@ use std::mem::MaybeUninit;
 use std::ops::AddAssign;
 
 #[cfg(feature = "bn254")]
-use bn254::ff::{Field, PrimeField};
+pub use bn254::ff::{Field, PrimeField};
 #[cfg(feature = "halo2curves_v1")]
-use halo2curves_v1::ff::{Field, PrimeField};
+pub use halo2curves_v1::ff::{Field, PrimeField};
 #[cfg(feature = "halo2curves_v3")]
-use halo2curves_v3::ff::{Field, PrimeField};
+pub use halo2curves_v3::ff::{Field, PrimeField};
 
 mod constants;
 mod imp;
