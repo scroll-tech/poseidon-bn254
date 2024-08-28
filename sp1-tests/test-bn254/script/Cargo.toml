@@ -1,5 +1,5 @@
 [package]
-name = "poseidon-test-script"
+name = "poseidon-bn254-test-script"
 version = "0.1.0"
 edition = "2021"
 

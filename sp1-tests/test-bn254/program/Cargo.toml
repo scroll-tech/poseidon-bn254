@@ -1,5 +1,5 @@
 [package]
-name = "poseidon-test-program"
+name = "poseidon-bn254-test-program"
 version = "0.1.0"
 edition = "2021"
 
