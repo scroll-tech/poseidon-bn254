@@ -3481,7 +3481,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "poseidon-test-program"
+name = "poseidon-halo2-test-program"
 version = "0.1.0"
 dependencies = [
  "ethers-core 2.0.7",
@@ -3493,7 +3493,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "poseidon-test-script"
+name = "poseidon-halo2-test-script"
 version = "0.1.0"
 dependencies = [
  "sp1-helper",

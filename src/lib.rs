@@ -15,6 +15,12 @@ pub use halo2curves_v3::ff::{Field, PrimeField};
 
 mod constants;
 mod imp;
+#[cfg(all(
+    not(target_os = "zkvm"),
+    not(target_vendor = "succinct"),
+    feature = "zkvm-hint"
+))]
+mod zkvm_hints;
 
 #[cfg(feature = "bn254")]
 pub use bn254::Fr;
@@ -23,18 +29,36 @@ pub use halo2curves_v1::bn256::Fr;
 #[cfg(feature = "halo2curves_v3")]
 pub use halo2curves_v3::bn256::Fr;
 
+#[cfg(all(
+    not(target_os = "zkvm"),
+    not(target_vendor = "succinct"),
+    feature = "zkvm-hint"
+))]
+pub use zkvm_hints::set_zkvm_hint_hook;
+
 pub(crate) use constants::*;
 
 pub(crate) type State = [Fr; T];
 pub(crate) type Mds = [[Fr; T]; T];
 
 pub fn hash_with_domain(inp: &[Fr; 2], domain: Fr) -> Fr {
+    #[cfg(all(target_os = "zkvm", target_vendor = "succinct", feature = "zkvm-hint"))]
+    return Fr::from_repr_vartime(sp1_lib::io::read_vec().try_into().unwrap()).unwrap();
+
     if inp[1].is_zero_vartime() && inp[0].is_zero_vartime() && domain.is_zero_vartime() {
         return EMPTY_HASH;
     }
     let mut state = MaybeUninit::<State>::uninit();
     let state = imp::init_state_with_cap_and_msg(&mut state, &domain, inp);
     imp::permute(state);
+
+    #[cfg(all(
+        not(target_os = "zkvm"),
+        not(target_vendor = "succinct"),
+        feature = "zkvm-hint"
+    ))]
+    zkvm_hints::hint(state[0].to_repr());
+
     state[0]
 }
 
@@ -44,6 +68,9 @@ pub fn hash_msg(msg: &[Fr], cap: Option<u128>) -> Fr {
     if msg.is_empty() && cap.map(|c| c == 0).unwrap_or(true) {
         return EMPTY_HASH;
     }
+
+    #[cfg(all(target_os = "zkvm", target_vendor = "succinct", feature = "zkvm-hint"))]
+    return Fr::from_repr_vartime(sp1_lib::io::read_vec().try_into().unwrap()).unwrap();
 
     let cap = cap.map(Fr::from_u128).unwrap_or_else(|| {
         // trick here since msg.len() won't exceed u64::MAX
@@ -56,29 +83,36 @@ pub fn hash_msg(msg: &[Fr], cap: Option<u128>) -> Fr {
     let state = imp::init_state_with_cap_and_msg(&mut state, &cap, msg);
     imp::permute(state);
 
-    match msg.len() {
-        0..=2 => state[0],
-        _ => {
-            for chunk in msg.chunks(RATE).skip(1) {
-                if chunk.len() == RATE {
-                    state[1].add_assign(&chunk[0]);
-                    state[2].add_assign(&chunk[1]);
-                    imp::permute(state);
-                } else {
-                    state[1].add_assign(&chunk[0]);
-                    imp::permute(state);
-                }
+    if msg.len() > 2 {
+        for chunk in msg.chunks(RATE).skip(1) {
+            if chunk.len() == RATE {
+                state[1].add_assign(&chunk[0]);
+                state[2].add_assign(&chunk[1]);
+                imp::permute(state);
+            } else {
+                state[1].add_assign(&chunk[0]);
+                imp::permute(state);
             }
-
-            state[0]
         }
-    }
+    };
+
+    #[cfg(all(
+        not(target_os = "zkvm"),
+        not(target_vendor = "succinct"),
+        feature = "zkvm-hint"
+    ))]
+    zkvm_hints::hint(state[0].to_repr());
+
+    state[0]
 }
 
 pub fn hash_code(code: &[u8]) -> [u8; 32] {
     if code.is_empty() {
         return EMPTY_HASH_BYTES;
     }
+
+    #[cfg(all(target_os = "zkvm", target_vendor = "succinct", feature = "zkvm-hint"))]
+    return sp1_lib::io::read_vec().try_into().unwrap();
 
     let mut msg = code.chunks(POSEIDON_HASH_BYTES_IN_FIELD).map(|chunk| {
         let mut be_bytes = [0u8; 32];
@@ -137,6 +171,14 @@ pub fn hash_code(code: &[u8]) -> [u8; 32] {
     result[16..24].copy_from_slice(&bytes[8..16]);
     result[8..16].copy_from_slice(&bytes[16..24]);
     result[0..8].copy_from_slice(&bytes[24..32]);
+
+    #[cfg(all(
+        not(target_os = "zkvm"),
+        not(target_vendor = "succinct"),
+        feature = "zkvm-hint"
+    ))]
+    zkvm_hints::hint(result);
+
     result
 }
 
