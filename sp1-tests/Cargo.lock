@@ -130,7 +130,7 @@ checksum = "867a5469d61480fea08c7333ffeca52d5b621f5ca2e44f271b117ec1fc9a0525"
 dependencies = [
  "alloy-sol-macro-input",
  "const-hex",
- "heck 0.5.0",
+ "heck",
  "indexmap 2.4.0",
  "proc-macro-error",
  "proc-macro2",
@@ -148,7 +148,7 @@ checksum = "2e482dc33a32b6fadbc0f599adea520bd3aaa585c141a80b404d0a3e3fa72528"
 dependencies = [
  "const-hex",
  "dunce",
- "heck 0.5.0",
+ "heck",
  "proc-macro2",
  "quote",
  "syn 2.0.75",
@@ -688,6 +688,20 @@ name = "bytemuck"
 version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6fd4c6dcc3b0aea2f5c0b4b82c2b15fe39ddbc76041a310848f4706edf76bb31"
+dependencies = [
+ "bytemuck_derive",
+]
+
+[[package]]
+name = "bytemuck_derive"
+version = "1.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0cc8b54b395f2fcfbb3d90c47b01c7f444d94d05bdeb775811dec868ac3bbc26"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.75",
+]
 
 [[package]]
 name = "byteorder"
@@ -824,7 +838,7 @@ version = "4.5.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "501d359d5f3dcaf6ecdeee48833ae73ec6e42723a1e52419c79abf9507eec0a0"
 dependencies = [
- "heck 0.5.0",
+ "heck",
  "proc-macro2",
  "quote",
  "syn 2.0.75",
@@ -1093,6 +1107,84 @@ dependencies = [
 ]
 
 [[package]]
+name = "dashu"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "85b3e5ac1e23ff1995ef05b912e2b012a8784506987a2651552db2c73fb3d7e0"
+dependencies = [
+ "dashu-base",
+ "dashu-float",
+ "dashu-int",
+ "dashu-macros",
+ "dashu-ratio",
+ "rustversion",
+]
+
+[[package]]
+name = "dashu-base"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c0b80bf6b85aa68c58ffea2ddb040109943049ce3fbdf4385d0380aef08ef289"
+
+[[package]]
+name = "dashu-float"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "85078445a8dbd2e1bd21f04a816f352db8d333643f0c9b78ca7c3d1df71063e7"
+dependencies = [
+ "dashu-base",
+ "dashu-int",
+ "num-modular",
+ "num-order",
+ "rustversion",
+ "static_assertions",
+]
+
+[[package]]
+name = "dashu-int"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ee99d08031ca34a4d044efbbb21dff9b8c54bb9d8c82a189187c0651ffdb9fbf"
+dependencies = [
+ "cfg-if",
+ "dashu-base",
+ "num-modular",
+ "num-order",
+ "rustversion",
+ "static_assertions",
+]
+
+[[package]]
+name = "dashu-macros"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "93381c3ef6366766f6e9ed9cf09e4ef9dec69499baf04f0c60e70d653cf0ab10"
+dependencies = [
+ "dashu-base",
+ "dashu-float",
+ "dashu-int",
+ "dashu-ratio",
+ "paste",
+ "proc-macro2",
+ "quote",
+ "rustversion",
+]
+
+[[package]]
+name = "dashu-ratio"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "47e33b04dd7ce1ccf8a02a69d3419e354f2bbfdf4eb911a0b7465487248764c9"
+dependencies = [
+ "dashu-base",
+ "dashu-float",
+ "dashu-int",
+ "num-modular",
+ "num-order",
+ "rustversion",
+]
+
+[[package]]
 name = "der"
 version = "0.7.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1281,6 +1373,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "enum-map"
+version = "2.7.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6866f3bfdf8207509a033af1a75a7b08abda06bbaaeae6669323fd5a097df2e9"
+dependencies = [
+ "enum-map-derive",
+ "serde",
+]
+
+[[package]]
+name = "enum-map-derive"
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f282cfdfe92516eb26c2af8589c274c7c17681f5ecc03c18255fe741c6aa64eb"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.75",
+]
+
+[[package]]
 name = "equivalent"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1374,7 +1487,7 @@ checksum = "816841ea989f0c69e459af1cf23a6b0033b19a55424a1ea3a30099becdb8dec0"
 dependencies = [
  "ethers-addressbook",
  "ethers-contract",
- "ethers-core 2.0.14",
+ "ethers-core",
  "ethers-middleware",
  "ethers-providers",
  "ethers-signers",
@@ -1386,7 +1499,7 @@ version = "2.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5495afd16b4faa556c3bba1f21b98b4983e53c1755022377051a975c3b021759"
 dependencies = [
- "ethers-core 2.0.14",
+ "ethers-core",
  "once_cell",
  "serde",
  "serde_json",
@@ -1401,7 +1514,7 @@ dependencies = [
  "const-hex",
  "ethers-contract-abigen",
  "ethers-contract-derive",
- "ethers-core 2.0.14",
+ "ethers-core",
  "ethers-providers",
  "futures-util",
  "once_cell",
@@ -1420,7 +1533,7 @@ dependencies = [
  "Inflector",
  "const-hex",
  "dunce",
- "ethers-core 2.0.14",
+ "ethers-core",
  "eyre",
  "prettyplease",
  "proc-macro2",
@@ -1442,37 +1555,11 @@ dependencies = [
  "Inflector",
  "const-hex",
  "ethers-contract-abigen",
- "ethers-core 2.0.14",
+ "ethers-core",
  "proc-macro2",
  "quote",
  "serde_json",
  "syn 2.0.75",
-]
-
-[[package]]
-name = "ethers-core"
-version = "2.0.7"
-source = "git+https://github.com/scroll-tech/ethers-rs.git?branch=v2.0.7#e32dfd62e7cdec31160b91c5a646883594a586ba"
-dependencies = [
- "arrayvec",
- "bytes",
- "chrono",
- "elliptic-curve",
- "ethabi",
- "generic-array 0.14.7",
- "hex",
- "k256",
- "num_enum 0.6.1",
- "open-fastrlp",
- "rand",
- "rlp",
- "serde",
- "serde_json",
- "strum 0.24.1",
- "tempfile",
- "thiserror",
- "tiny-keccak",
- "unicode-xid",
 ]
 
 [[package]]
@@ -1497,7 +1584,7 @@ dependencies = [
  "rlp",
  "serde",
  "serde_json",
- "strum 0.26.3",
+ "strum",
  "syn 2.0.75",
  "tempfile",
  "thiserror",
@@ -1514,7 +1601,7 @@ dependencies = [
  "async-trait",
  "auto_impl",
  "ethers-contract",
- "ethers-core 2.0.14",
+ "ethers-core",
  "ethers-providers",
  "ethers-signers",
  "futures-channel",
@@ -1543,7 +1630,7 @@ dependencies = [
  "bytes",
  "const-hex",
  "enr",
- "ethers-core 2.0.14",
+ "ethers-core",
  "futures-core",
  "futures-timer",
  "futures-util",
@@ -1579,7 +1666,7 @@ dependencies = [
  "const-hex",
  "elliptic-curve",
  "eth-keystore",
- "ethers-core 2.0.14",
+ "ethers-core",
  "rand",
  "sha2",
  "thiserror",
@@ -1627,7 +1714,8 @@ dependencies = [
 [[package]]
 name = "ff"
 version = "0.13.0"
-source = "git+https://github.com/scroll-tech/ff?branch=feat/sp1#244b1098f6be1d19c5fd3f0ec60117ac2940e6ca"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ded41244b729663b1e574f1b4fb731469f69f79c17667b5d776b16cda0479449"
 dependencies = [
  "bitvec",
  "byteorder",
@@ -1639,7 +1727,8 @@ dependencies = [
 [[package]]
 name = "ff_derive"
 version = "0.13.0"
-source = "git+https://github.com/scroll-tech/ff?branch=feat/sp1#244b1098f6be1d19c5fd3f0ec60117ac2940e6ca"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e9f54704be45ed286151c5e11531316eaef5b8f5af7d597b806fdb8af108d84a"
 dependencies = [
  "addchain",
  "cfg-if",
@@ -1857,8 +1946,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c4567c8db10ae91089c99af84c68c38da3ec2f087c3f82960bcdbf3656b6f4d7"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
  "wasi",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -1983,24 +2074,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "halo2curves"
-version = "0.3.3"
-source = "git+https://github.com/scroll-tech//halo2curves.git?branch=feat/sp1#a8314863d5e7e8325476eaea35fc20c5384dc4a2"
-dependencies = [
- "ff 0.13.0",
- "group 0.13.0",
- "lazy_static",
- "num-bigint 0.4.6",
- "num-traits",
- "pasta_curves 0.5.1",
- "paste",
- "rand",
- "rand_core",
- "static_assertions",
- "subtle",
-]
-
-[[package]]
 name = "hashbrown"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2025,12 +2098,6 @@ checksum = "b2bca93b15ea5a746f220e56587f71e73c6165eab783df9e26590069953e3c30"
 dependencies = [
  "fxhash",
 ]
-
-[[package]]
-name = "heck"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "95505c38b4572b2d910cecb0281560f54b440a19336cbbcb27bf6ce6adc6f5a8"
 
 [[package]]
 name = "heck"
@@ -2777,6 +2844,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "num-modular"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "17bb261bf36fa7d83f4c294f834e91256769097b3cb505d44831e0a179ac647f"
+
+[[package]]
+name = "num-order"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "537b596b97c40fcf8056d153049eb22f481c17ebce72a513ec9286e4986d1bb6"
+dependencies = [
+ "num-modular",
+]
+
+[[package]]
 name = "num-rational"
 version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2818,15 +2900,6 @@ dependencies = [
 
 [[package]]
 name = "num_enum"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a015b430d3c108a207fd776d2e2196aaf8b1cf8cf93253e3a097ff3085076a1"
-dependencies = [
- "num_enum_derive 0.6.1",
-]
-
-[[package]]
-name = "num_enum"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4e613fc340b2220f734a8595782c551f1250e969d87d3be1ae0579e8d4065179"
@@ -2844,18 +2917,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
-]
-
-[[package]]
-name = "num_enum_derive"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "96667db765a921f7b295ffee8b60472b686a51d4f21c2ee4ffdb94c7013b65a6"
-dependencies = [
- "proc-macro-crate 1.3.1",
- "proc-macro2",
- "quote",
- "syn 2.0.75",
 ]
 
 [[package]]
@@ -3462,38 +3523,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "da544ee218f0d287a911e9c99a39a8c9bc8fcad3cb8db5959940044ecfc67265"
 
 [[package]]
-name = "poseidon-base"
-version = "0.1.0"
-source = "git+https://github.com/scroll-tech/poseidon-circuit?branch=feat/sp1#055e6c72cc9d3261f96fe42565267a479cd5bfa6"
-dependencies = [
- "bitvec",
- "halo2curves",
- "lazy_static",
- "subtle",
-]
-
-[[package]]
 name = "poseidon-bn254"
 version = "0.1.0"
 dependencies = [
- "halo2curves",
  "itertools 0.13.0",
+ "substrate-bn",
 ]
 
 [[package]]
-name = "poseidon-halo2-test-program"
+name = "poseidon-bn254-test-program"
 version = "0.1.0"
 dependencies = [
- "ethers-core 2.0.7",
  "itertools 0.13.0",
- "poseidon-base",
  "poseidon-bn254",
- "sp1-lib",
+ "sp1-lib 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp1-zkvm",
 ]
 
 [[package]]
-name = "poseidon-halo2-test-script"
+name = "poseidon-bn254-test-script"
 version = "0.1.0"
 dependencies = [
  "sp1-helper",
@@ -3712,9 +3760,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.36"
+version = "1.0.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0fa76aaf39101c457836aec0ce2316dbdc3ab723cdda1c6bd4e6ad4208acaca7"
+checksum = "b5b9d34b8991d19d98081b46eacdd8eb58c6f2b201139f7c5f643cc155a633af"
 dependencies = [
  "proc-macro2",
 ]
@@ -3928,7 +3976,7 @@ dependencies = [
  "serde_json",
  "serde_urlencoded",
  "sync_wrapper 1.0.1",
- "system-configuration 0.6.0",
+ "system-configuration 0.6.1",
  "tokio",
  "tokio-native-tls",
  "tokio-rustls",
@@ -4588,19 +4636,60 @@ dependencies = [
 
 [[package]]
 name = "sp1-build"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8216e07a9c463c6ee091cdc817cfc10c25446cfd4d020812818177e0a3d1c943"
 dependencies = [
  "anyhow",
  "cargo_metadata",
+ "chrono",
  "clap",
  "dirs",
 ]
 
 [[package]]
-name = "sp1-core"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+name = "sp1-core-executor"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9855631556145c827f959527a2f60cb2c6ededfb42afcee49e41dab5f507ce7b"
+dependencies = [
+ "bincode",
+ "bytemuck",
+ "elf",
+ "enum-map",
+ "eyre",
+ "generic-array 1.1.0",
+ "hashbrown 0.14.5",
+ "hex",
+ "itertools 0.13.0",
+ "log",
+ "nohash-hasher",
+ "num",
+ "p3-field",
+ "p3-keccak-air",
+ "p3-maybe-rayon",
+ "rand",
+ "rrs-succinct",
+ "serde",
+ "serde_with",
+ "sp1-curves",
+ "sp1-derive",
+ "sp1-primitives",
+ "sp1-stark",
+ "strum",
+ "strum_macros",
+ "thiserror",
+ "tiny-keccak",
+ "tracing",
+ "typenum",
+ "vec_map",
+]
+
+[[package]]
+name = "sp1-core-machine"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7d9c51416ef52b258fa637538c02a2ac06ecaeec79d075c620013a77f035dee"
 dependencies = [
  "anyhow",
  "arrayref",
@@ -4645,11 +4734,14 @@ dependencies = [
  "serde_with",
  "size",
  "snowbridge-amcl",
+ "sp1-core-executor",
+ "sp1-curves",
  "sp1-derive",
  "sp1-primitives",
+ "sp1-stark",
  "static_assertions",
- "strum 0.26.3",
- "strum_macros 0.26.4",
+ "strum",
+ "strum_macros",
  "tempfile",
  "thiserror",
  "tracing",
@@ -4660,9 +4752,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "sp1-curves"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d7c33d4d3f5e3590cc8c8d8a3d074097020bc0be0b9dd35fe43e04c586440c85"
+dependencies = [
+ "curve25519-dalek",
+ "dashu",
+ "elliptic-curve",
+ "generic-array 1.1.0",
+ "itertools 0.13.0",
+ "k256",
+ "num",
+ "p3-field",
+ "serde",
+ "snowbridge-amcl",
+ "sp1-primitives",
+ "sp1-stark",
+ "typenum",
+]
+
+[[package]]
 name = "sp1-derive"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3e33825340e1b21b37a29f5304fbd18a1c7c97ba1376fa35b7c017fd95dd627e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4671,29 +4785,45 @@ dependencies = [
 
 [[package]]
 name = "sp1-helper"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f08124c62d09764810783355cff518477e3f36c8e83343623859afeca6f3eeb"
 dependencies = [
- "cargo_metadata",
- "chrono",
  "sp1-build",
 ]
 
 [[package]]
 name = "sp1-lib"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "413956de14568d7fb462213b9505ad4607d75c875301b9eca567cfb2e58eaac1"
 dependencies = [
  "anyhow",
  "bincode",
  "cfg-if",
+ "hex",
  "serde",
+ "snowbridge-amcl",
+]
+
+[[package]]
+name = "sp1-lib"
+version = "2.0.0"
+source = "git+https://github.com/succinctlabs/sp1.git?branch=dev#7457d8be7a25e0429f6ca5d8ce9565130545e2f9"
+dependencies = [
+ "anyhow",
+ "bincode",
+ "cfg-if",
+ "hex",
+ "serde",
+ "snowbridge-amcl",
 ]
 
 [[package]]
 name = "sp1-primitives"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "efbeba375fe59917f162f1808c280d2e39e4698dc7eeac83936b6e70c2f8dbbc"
 dependencies = [
  "itertools 0.13.0",
  "lazy_static",
@@ -4705,8 +4835,9 @@ dependencies = [
 
 [[package]]
 name = "sp1-prover"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "166e9f9fd29ecdfd4fd452d49052abdfbe735317f00016e94fde8410f90b4134"
 dependencies = [
  "anyhow",
  "bincode",
@@ -4726,13 +4857,15 @@ dependencies = [
  "serde",
  "serde_json",
  "serial_test",
- "sp1-core",
+ "sp1-core-executor",
+ "sp1-core-machine",
  "sp1-primitives",
  "sp1-recursion-circuit",
  "sp1-recursion-compiler",
  "sp1-recursion-core",
  "sp1-recursion-gnark-ffi",
  "sp1-recursion-program",
+ "sp1-stark",
  "subtle-encoding",
  "tempfile",
  "thiserror",
@@ -4742,8 +4875,9 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-circuit"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a3ccdda16cd078f32c6707212b8e8f3e423992eeff6ace898d3e15bf94e78a16"
 dependencies = [
  "bincode",
  "itertools 0.13.0",
@@ -4756,17 +4890,19 @@ dependencies = [
  "p3-matrix",
  "p3-util",
  "serde",
- "sp1-core",
+ "sp1-core-machine",
  "sp1-recursion-compiler",
  "sp1-recursion-core",
  "sp1-recursion-derive",
  "sp1-recursion-program",
+ "sp1-stark",
 ]
 
 [[package]]
 name = "sp1-recursion-compiler"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ae17b6c8506b3521e78450cf28f76c2426b5b2f132bb89660d3d61eb155439c4"
 dependencies = [
  "backtrace",
  "itertools 0.13.0",
@@ -4780,18 +4916,23 @@ dependencies = [
  "p3-poseidon2",
  "p3-symmetric",
  "p3-util",
+ "rayon",
  "serde",
- "sp1-core",
+ "sp1-core-machine",
  "sp1-primitives",
  "sp1-recursion-core",
+ "sp1-recursion-core-v2",
  "sp1-recursion-derive",
+ "sp1-stark",
  "tracing",
+ "vec_map",
 ]
 
 [[package]]
 name = "sp1-recursion-core"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8414c3d16cd2fedd293989cef601915d4e1efab662e3a08923606970dc8ae7e6"
 dependencies = [
  "arrayref",
  "backtrace",
@@ -4815,18 +4956,62 @@ dependencies = [
  "p3-util",
  "serde",
  "serde_with",
- "sp1-core",
+ "sp1-core-executor",
+ "sp1-core-machine",
  "sp1-derive",
  "sp1-primitives",
+ "sp1-stark",
  "static_assertions",
  "tracing",
  "zkhash",
 ]
 
 [[package]]
+name = "sp1-recursion-core-v2"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d0a2af67ca6f7db964b7f1ffdb48f6e26f10e3cc027a11bdd17b224f8747650"
+dependencies = [
+ "arrayref",
+ "backtrace",
+ "ff 0.13.0",
+ "hashbrown 0.14.5",
+ "itertools 0.13.0",
+ "num_cpus",
+ "p3-air",
+ "p3-baby-bear",
+ "p3-bn254-fr",
+ "p3-challenger",
+ "p3-commit",
+ "p3-dft",
+ "p3-field",
+ "p3-fri",
+ "p3-matrix",
+ "p3-maybe-rayon",
+ "p3-merkle-tree",
+ "p3-poseidon2",
+ "p3-symmetric",
+ "p3-util",
+ "serde",
+ "serde_with",
+ "sp1-core-executor",
+ "sp1-core-machine",
+ "sp1-derive",
+ "sp1-primitives",
+ "sp1-recursion-core",
+ "sp1-stark",
+ "static_assertions",
+ "thiserror",
+ "tracing",
+ "vec_map",
+ "zkhash",
+]
+
+[[package]]
 name = "sp1-recursion-derive"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4921db3912a60ee3896242ce336203066377e6eddd1c26d099e8bf6b9c470a21"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4835,8 +5020,9 @@ dependencies = [
 
 [[package]]
 name = "sp1-recursion-gnark-ffi"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "718b2e92bfd3ce91fcef2ac0b3a8d31746dbc3ad4071f3bec45aa2e5e025adb1"
 dependencies = [
  "anyhow",
  "bincode",
@@ -4853,15 +5039,17 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
- "sp1-core",
+ "sp1-core-machine",
  "sp1-recursion-compiler",
+ "sp1-stark",
  "tempfile",
 ]
 
 [[package]]
 name = "sp1-recursion-program"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "676661b42f5d55c64932ad400ec920bd8b8098b1500b13c483a541bf3b396dd1"
 dependencies = [
  "itertools 0.13.0",
  "p3-air",
@@ -4879,31 +5067,35 @@ dependencies = [
  "p3-util",
  "rand",
  "serde",
- "sp1-core",
+ "sp1-core-executor",
+ "sp1-core-machine",
  "sp1-primitives",
  "sp1-recursion-compiler",
  "sp1-recursion-core",
+ "sp1-stark",
  "stacker",
  "tracing",
 ]
 
 [[package]]
 name = "sp1-sdk"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2b289585392a3639f6541bce32dd89e03e7893f42e9b9bcf6bee7d54183d5e05"
 dependencies = [
  "alloy-sol-types",
  "anyhow",
  "async-trait",
- "axum",
  "bincode",
  "cfg-if",
  "dirs",
  "ethers",
  "futures",
+ "getrandom",
  "hashbrown 0.14.5",
  "hex",
  "indicatif",
+ "itertools 0.13.0",
  "log",
  "num-bigint 0.4.6",
  "p3-baby-bear",
@@ -4917,10 +5109,12 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
- "sp1-core",
+ "sp1-core-executor",
+ "sp1-core-machine",
  "sp1-prover",
- "strum 0.26.3",
- "strum_macros 0.26.4",
+ "sp1-stark",
+ "strum",
+ "strum_macros",
  "sysinfo",
  "tempfile",
  "thiserror",
@@ -4931,9 +5125,42 @@ dependencies = [
 ]
 
 [[package]]
+name = "sp1-stark"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4048fc99a6c1123f5040b5ade1ae2839ca1be421e4c427fc7d1fd9bbf6e174f5"
+dependencies = [
+ "arrayref",
+ "getrandom",
+ "hashbrown 0.14.5",
+ "itertools 0.13.0",
+ "p3-air",
+ "p3-baby-bear",
+ "p3-challenger",
+ "p3-commit",
+ "p3-dft",
+ "p3-field",
+ "p3-fri",
+ "p3-matrix",
+ "p3-maybe-rayon",
+ "p3-merkle-tree",
+ "p3-poseidon2",
+ "p3-symmetric",
+ "p3-uni-stark",
+ "p3-util",
+ "rayon-scan",
+ "serde",
+ "sp1-derive",
+ "sp1-primitives",
+ "sysinfo",
+ "tracing",
+]
+
+[[package]]
 name = "sp1-zkvm"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "66c525f67cfd3f65950f01c713a72c41a5d44d289155644c8ace4ec264098039"
 dependencies = [
  "bincode",
  "cfg-if",
@@ -4944,7 +5171,7 @@ dependencies = [
  "rand",
  "serde",
  "sha2",
- "sp1-lib",
+ "sp1-lib 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -4996,33 +5223,11 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "strum"
-version = "0.24.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "063e6045c0e62079840579a7e47a355ae92f60eb74daaf156fb1e84ba164e63f"
-dependencies = [
- "strum_macros 0.24.3",
-]
-
-[[package]]
-name = "strum"
 version = "0.26.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8fec0f0aef304996cf250b31b5a10dee7980c85da9d759361292b8bca5a18f06"
 dependencies = [
- "strum_macros 0.26.4",
-]
-
-[[package]]
-name = "strum_macros"
-version = "0.24.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e385be0d24f186b4ce2f9982191e7101bb737312ad61c1f2f984f34bcf85d59"
-dependencies = [
- "heck 0.4.1",
- "proc-macro2",
- "quote",
- "rustversion",
- "syn 1.0.109",
+ "strum_macros",
 ]
 
 [[package]]
@@ -5031,11 +5236,26 @@ version = "0.26.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4c6bee85a5a24955dc440386795aa378cd9cf82acd5f764469152d2270e581be"
 dependencies = [
- "heck 0.5.0",
+ "heck",
  "proc-macro2",
  "quote",
  "rustversion",
  "syn 2.0.75",
+]
+
+[[package]]
+name = "substrate-bn"
+version = "0.6.0"
+source = "git+https://github.com/scroll-tech/bn?branch=patch-v0.6.0#73f8cf71e8c842e064c984424ea95dc9e6b53b64"
+dependencies = [
+ "bytemuck",
+ "byteorder",
+ "cfg-if",
+ "crunchy",
+ "lazy_static",
+ "rand",
+ "rustc-hex",
+ "sp1-lib 2.0.0 (git+https://github.com/succinctlabs/sp1.git?branch=dev)",
 ]
 
 [[package]]
@@ -5130,9 +5350,9 @@ dependencies = [
 
 [[package]]
 name = "system-configuration"
-version = "0.6.0"
+version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "658bc6ee10a9b4fcf576e9b0819d95ec16f4d2c02d39fd83ac1c8789785c4a42"
+checksum = "3c879d448e9d986b661742763247d3693ed13609438cf3d006f51f5368a5ba6b"
 dependencies = [
  "bitflags 2.6.0",
  "core-foundation",
@@ -5639,6 +5859,15 @@ name = "vcpkg"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
+
+[[package]]
+name = "vec_map"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f1bddf1187be692e79c5ffeab891132dfb0f236ed36a43c7ed39f1165ee20191"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "vergen"

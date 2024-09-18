@@ -1,0 +1,16 @@
+[workspace]
+members = [
+    "program",
+    "script",
+]
+resolver = "2"
+
+[workspace.dependencies]
+itertools = "0.13"
+poseidon-bn254 = { path = ".." }
+
+sp1-helper = "2"
+sp1-lib = "2"
+sp1-prover = "2"
+sp1-sdk = { version = "2", features = ["native-gnark"] }
+sp1-zkvm = "2"

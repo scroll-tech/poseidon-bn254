@@ -14,15 +14,15 @@ fn main() {
     println!(
         "cycle-tracker-start: hash_with_domain(&[Fr::from(1u64), Fr::from(2u64)], Fr::from(3u64))"
     );
-    hash_with_domain(&[Fr::from(1u64), Fr::from(2u64)], Fr::from(3u64));
+    hash_with_domain(&[Fr::new_mul_factor(1u64.into()), Fr::new_mul_factor(2u64.into())], Fr::new_mul_factor(3u64.into()));
     println!(
         "cycle-tracker-end: hash_with_domain(&[Fr::from(1u64), Fr::from(2u64)], Fr::from(3u64))"
     );
 
     let msgs = [
-        &array::from_fn::<_, 1, _>(|i| Fr::from(i as u64))[..],
-        &array::from_fn::<_, 10, _>(|i| Fr::from(i as u64))[..],
-        &array::from_fn::<_, 11, _>(|i| Fr::from(i as u64))[..],
+        &array::from_fn::<_, 1, _>(|i| Fr::new_mul_factor((i as u64).into()))[..],
+        &array::from_fn::<_, 10, _>(|i| Fr::new_mul_factor((i as u64).into()))[..],
+        &array::from_fn::<_, 11, _>(|i| Fr::new_mul_factor((i as u64).into()))[..],
     ];
 
     let cap = [None, Some(100)];

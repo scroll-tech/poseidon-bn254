@@ -7,8 +7,8 @@ a computational only implementation of the Poseidon hash using in
 
 | task                          | poseidon-bn254 cycles | poseidon-circuit cycles |      difference |
 |:------------------------------|----------------------:|------------------------:|----------------:|
-| hash_with_domain([0, 0], 0) * |                   732 |                   8,199 |    7,467 (-91%) |
-| hash_with_domain([1, 2], 3)   |                 6,616 |                   8,199 |  1,583 (-19.3%) |
+| hash_with_domain([0, 0], 0) * |                   562 |                   8,199 |    7,467 (-91%) |
+| hash_with_domain([1, 2], 3)   |               313,501 |                   8,199 |  1,583 (-19.3%) |
 | hash_msg(1, None)             |                 6,580 |                   8,192 |  1,612 (-19.7%) |
 | hash_msg(1, Some(1))          |                 6,563 |                   8,192 |  1,629 (-19.9%) |
 | hash_msg(10, None)            |                29,605 |                  34,340 |  4,735 (-13.8%) |

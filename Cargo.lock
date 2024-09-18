@@ -106,22 +106,30 @@ dependencies = [
 ]
 
 [[package]]
-name = "bn254"
-version = "0.1.0"
-source = "git+https://github.com/scroll-tech/bn254#968936395106cb609832894c69d127ee7c93ad4a"
-dependencies = [
- "ff 0.13.0 (git+https://github.com/scroll-tech/ff?branch=feat/sp1)",
- "getrandom",
- "rand",
- "rand_core",
- "subtle",
-]
-
-[[package]]
 name = "byte-slice-cast"
 version = "1.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c3ac9f8b63eca6fd385229b3675f6cc0dc5c8a5c8a54a59d4f52ffd670d87b0c"
+
+[[package]]
+name = "bytemuck"
+version = "1.18.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "94bbb0ad554ad961ddc5da507a12a29b14e4ae5bda06b19f575a3e6079d2e2ae"
+dependencies = [
+ "bytemuck_derive",
+]
+
+[[package]]
+name = "bytemuck_derive"
+version = "1.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0cc8b54b395f2fcfbb3d90c47b01c7f444d94d05bdeb775811dec868ac3bbc26"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.75",
+]
 
 [[package]]
 name = "byteorder"
@@ -264,7 +272,7 @@ dependencies = [
  "base16ct",
  "crypto-bigint",
  "digest",
- "ff 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ff",
  "generic-array",
  "group",
  "pkcs8",
@@ -382,16 +390,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ff"
-version = "0.13.0"
-source = "git+https://github.com/scroll-tech/ff?branch=feat/sp1#244b1098f6be1d19c5fd3f0ec60117ac2940e6ca"
-dependencies = [
- "bitvec",
- "rand_core",
- "subtle",
-]
-
-[[package]]
 name = "fixed-hash"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -437,7 +435,7 @@ version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f0f9ef7462f7c099f518d754361858f86d8a07af53ba9af0fe635bbccb151a63"
 dependencies = [
- "ff 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ff",
  "rand_core",
  "subtle",
 ]
@@ -449,7 +447,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6b1142bd1059aacde1b477e0c80c142910f1ceae67fc619311d6a17428007ab"
 dependencies = [
  "blake2b_simd",
- "ff 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ff",
  "group",
  "lazy_static",
  "num-bigint",
@@ -460,24 +458,6 @@ dependencies = [
  "rand_core",
  "serde",
  "serde_arrays",
- "static_assertions",
- "subtle",
-]
-
-[[package]]
-name = "halo2curves"
-version = "0.3.3"
-source = "git+https://github.com/scroll-tech/halo2curves.git?branch=base-0.3.3#8e4cb9f0c66c864e8ca25da07f50ae95f664a5b7"
-dependencies = [
- "ff 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "group",
- "lazy_static",
- "num-bigint",
- "num-traits",
- "pasta_curves",
- "paste",
- "rand",
- "rand_core",
  "static_assertions",
  "subtle",
 ]
@@ -734,7 +714,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d3e57598f73cc7e1b2ac63c79c517b31a0877cd7c402cdcaa311b5208de7a095"
 dependencies = [
  "blake2b_simd",
- "ff 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ff",
  "group",
  "lazy_static",
  "rand",
@@ -764,7 +744,7 @@ version = "0.1.0"
 source = "git+https://github.com/scroll-tech/poseidon-circuit?branch=main#7b96835c6201afdbfaf3d13d641efbaaf5db2d20"
 dependencies = [
  "bitvec",
- "halo2curves 0.1.0",
+ "halo2curves",
  "lazy_static",
 ]
 
@@ -772,13 +752,12 @@ dependencies = [
 name = "poseidon-bn254"
 version = "0.1.0"
 dependencies = [
- "bn254",
  "ethers-core",
- "halo2curves 0.1.0",
- "halo2curves 0.3.3",
+ "halo2curves",
  "itertools",
  "poseidon-base",
- "sp1-lib",
+ "sp1-lib 1.1.0",
+ "substrate-bn",
 ]
 
 [[package]]
@@ -1080,6 +1059,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "snowbridge-amcl"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "460a9ed63cdf03c1b9847e8a12a5f5ba19c4efd5869e4a737e05be25d7c427e5"
+dependencies = [
+ "parity-scale-codec",
+ "scale-info",
+]
+
+[[package]]
 name = "sp1-lib"
 version = "1.1.0"
 source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
@@ -1088,6 +1077,20 @@ dependencies = [
  "bincode",
  "cfg-if",
  "serde",
+]
+
+[[package]]
+name = "sp1-lib"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bea7811abd2d3a991007fcb284f41152840b8388c171288d0c52c6793956609c"
+dependencies = [
+ "anyhow",
+ "bincode",
+ "cfg-if",
+ "hex",
+ "serde",
+ "snowbridge-amcl",
 ]
 
 [[package]]
@@ -1132,6 +1135,21 @@ dependencies = [
  "quote",
  "rustversion",
  "syn 1.0.109",
+]
+
+[[package]]
+name = "substrate-bn"
+version = "0.7.0"
+dependencies = [
+ "bytemuck",
+ "byteorder",
+ "cfg-if",
+ "crunchy",
+ "lazy_static",
+ "num-bigint",
+ "rand",
+ "rustc-hex",
+ "sp1-lib 1.2.0",
 ]
 
 [[package]]
