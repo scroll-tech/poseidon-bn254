@@ -8,11 +8,14 @@ bn254 = { git = "https://github.com/scroll-tech/bn254", optional = true }
 halo2curves_v1 = { package = "halo2curves", version = "0.1.0", optional = true }
 halo2curves_v3 = { package = "halo2curves", git = "https://github.com/scroll-tech/halo2curves.git", branch = "base-0.3.3", optional = true }
 itertools = "0.13"
-sp1-lib = { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830", optional = true }
+sp1-lib = { git = "https://github.com/succinctlabs/sp1.git", tag = "v2.0.0", optional = true }
 
 [dev-dependencies]
 ethers-core = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "v2.0.7" }
 poseidon-base = { git = "https://github.com/scroll-tech/poseidon-circuit", branch = "main" }
+
+[patch."https://github.com/succinctlabs/sp1.git"]
+sp1-lib = { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830"}
 
 [features]
 bn254 = ["dep:bn254"]

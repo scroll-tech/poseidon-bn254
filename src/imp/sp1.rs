@@ -2,10 +2,10 @@ use crate::{Fr, State, T};
 use core::arch::asm;
 use std::mem::MaybeUninit;
 
-const MEMCPY_32: u32 = 0x00_00_01_30;
-const MEMCPY_64: u32 = 0x00_00_01_31;
-const BN254_SCALAR_MUL: u32 = 0x00_01_01_20;
-const BN254_SCALAR_MAC: u32 = 0x00_01_01_21;
+const MEMCPY_32: u32 = 0x00_01_01_90;
+const MEMCPY_64: u32 = 0x00_01_01_91;
+const BN254_SCALAR_MUL: u32 = 0x00_01_01_80;
+const BN254_SCALAR_MAC: u32 = 0x00_01_01_81;
 
 #[inline(always)]
 pub(crate) fn mul_add_assign(a: &mut Fr, b: &Fr, c: &Fr) {
