@@ -15,7 +15,7 @@ ethers-core = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "
 poseidon-base = { git = "https://github.com/scroll-tech/poseidon-circuit", branch = "main" }
 
 [patch."https://github.com/succinctlabs/sp1.git"]
-sp1-lib = { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830",}
+sp1-lib = { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-0830"}
 
 [features]
 bn254 = ["dep:bn254"]
