@@ -1,4 +1,4 @@
-use crate::{Fr, State, T};
+use crate::{Fr, State};
 use std::mem::MaybeUninit;
 
 #[inline(always)]
@@ -16,20 +16,6 @@ fn sbox(val: Fr) -> Fr {
 #[inline(always)]
 pub(crate) fn sbox_inplace(val: &mut Fr) {
     *val = sbox(*val);
-}
-
-#[inline(always)]
-pub(crate) fn fill_state(state: &mut MaybeUninit<State>, val: &Fr) {
-    unsafe {
-        for i in 0..T {
-            (state.as_mut_ptr() as *mut Fr).add(i).write(*val);
-        }
-    }
-}
-
-#[inline(always)]
-pub(crate) fn set_state(state: &mut State, new_state: &State) {
-    state.copy_from_slice(new_state);
 }
 
 #[inline(always)]

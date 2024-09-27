@@ -1080,14 +1080,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "snowbridge-amcl"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "460a9ed63cdf03c1b9847e8a12a5f5ba19c4efd5869e4a737e05be25d7c427e5"
+dependencies = [
+ "parity-scale-codec",
+ "scale-info",
+]
+
+[[package]]
 name = "sp1-lib"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#bc5b34fee2fbaefb804a585b9764e652f804b627"
 dependencies = [
  "anyhow",
  "bincode",
  "cfg-if",
+ "hex",
  "serde",
+ "snowbridge-amcl",
 ]
 
 [[package]]

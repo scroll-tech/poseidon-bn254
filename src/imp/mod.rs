@@ -1,32 +1,52 @@
-use crate::{Fr, State, FULL_ROUNDS, MDS, PARTIAL_ROUNDS, ROUND_CONSTANTS, T};
 use std::mem::MaybeUninit;
+use crate::{Fr, State, FULL_ROUNDS, MDS, PARTIAL_ROUNDS, ROUND_CONSTANTS, T, Field};
 use std::ops::{AddAssign, MulAssign};
+
 
 #[cfg(not(all(target_os = "zkvm", target_vendor = "succinct")))]
 mod host;
 #[cfg(not(all(target_os = "zkvm", target_vendor = "succinct")))]
 pub(crate) use host::{
-    fill_state, init_state_with_cap_and_msg, mul_add_assign, sbox_inplace, set_fr, set_state,
+    init_state_with_cap_and_msg, mul_add_assign, sbox_inplace, set_fr,
 };
 
 #[cfg(all(target_os = "zkvm", target_vendor = "succinct"))]
 mod sp1;
 #[cfg(all(target_os = "zkvm", target_vendor = "succinct"))]
 pub(crate) use sp1::{
-    fill_state, init_state_with_cap_and_msg, mul_add_assign, sbox_inplace, set_fr, set_state,
+    init_state_with_cap_and_msg, mul_add_assign, sbox_inplace, set_fr,
 };
+
+#[inline(always)]
+unsafe fn fill_state(state: *mut State, val: &Fr) {
+    set_fr((state as *mut Fr).add(0), val);
+    set_fr((state as *mut Fr).add(1), val);
+    set_fr((state as *mut Fr).add(2), val);
+}
+
+#[inline(always)]
+fn set_state(state: &mut State, new_state: &State) {
+    unsafe {
+        set_fr(&mut state[0], &new_state[0]);
+        set_fr(&mut state[1], &new_state[1]);
+        set_fr(&mut state[2], &new_state[2]);
+    }
+}
 
 #[inline(always)]
 pub fn permute(state: &mut State) {
     const R_F: usize = FULL_ROUNDS / 2;
     const R_P: usize = PARTIAL_ROUNDS;
 
-    let mut new_state = MaybeUninit::<State>::uninit();
+    // Box => InvalidMemoryAccess(LW, 2094555)
+    // otherwise => unaligned pointer
+    // including MaybeUninit/[Fr::ZERO, Fr::ZERO, Fr::ZERO]
+    let mut new_state = [Fr::ZERO, Fr::ZERO, Fr::ZERO];
 
     let mut apply_mds = |state: &mut State| {
-        fill_state(&mut new_state, &state[0]);
+        unsafe { fill_state(new_state.as_mut(), &state[0]); }
 
-        let new_state = unsafe { new_state.assume_init_mut() };
+        // let new_state = unsafe { new_state.assume_init_mut() };
 
         // Matrix multiplication
         for i in 0..T {
@@ -36,7 +56,7 @@ pub fn permute(state: &mut State) {
             }
         }
 
-        set_state(state, new_state);
+        set_state(state, &new_state);
     };
 
     for i in 0..R_F {
