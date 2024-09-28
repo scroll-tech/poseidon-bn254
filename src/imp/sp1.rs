@@ -1,65 +1,80 @@
-use crate::{Fr, State, T};
+use crate::{Fr, State, T, Field};
 use core::arch::asm;
 use std::mem::MaybeUninit;
 
-const MEMCPY_32: u32 = 0x00_00_01_30;
-const MEMCPY_64: u32 = 0x00_00_01_31;
-const BN254_SCALAR_MUL: u32 = 0x00_01_01_20;
-const BN254_SCALAR_MAC: u32 = 0x00_01_01_21;
+const GRUMPKIN_FP_ADD: u32 = 0x00_01_01_56;
+const GRUMPKIN_FP_MUL: u32 = 0x00_01_01_58;
 
+
+static ZERO: Fr = Fr::ZERO;
+static ONE: Fr = Fr::ONE;
+
+/// a += b
 #[inline(always)]
-pub(crate) fn mul_add_assign(a: &mut Fr, b: &Fr, c: &Fr) {
+pub(crate) fn add_assign(a: *mut Fr, b: *const Fr) {
+   unsafe {
+       asm!(
+            "ecall",
+            in("t0") GRUMPKIN_FP_ADD,
+            in("a0") a,
+            in("a1") b,
+       );
+   }
+}
+
+/// a *= b
+#[inline(always)]
+pub(crate) fn mul_assign(a: *mut Fr, b: *const Fr) {
     unsafe {
         asm!(
             "ecall",
-            in("t0") BN254_SCALAR_MAC,
+            in("t0") GRUMPKIN_FP_MUL,
             in("a0") a,
-            in("a1") &[b, c],
+            in("a1") b,
         );
     }
 }
 
 #[inline(always)]
-pub(crate) fn sbox_inplace(val: &mut Fr) {
-    let mut a = MaybeUninit::<Fr>::uninit();
+pub(crate) fn set_fr_zero(dst: *mut Fr) {
+    // dst *= 0
+    mul_assign(dst, &ZERO);
+}
 
+#[inline(always)]
+pub(crate) fn set_fr(dst: *mut Fr, src: &Fr) {
     unsafe {
-        core::arch::asm!(
-            "ecall",
-            in("t0") MEMCPY_32,
-            in("a0") val,
-            in("a1") a.as_mut_ptr(),
-        );
-        core::arch::asm!(
-            "ecall",
-            in("t0") BN254_SCALAR_MUL,
-            in("a0") &mut a,
-            in("a1") val,
-        );
-        core::arch::asm!(
-            "ecall",
-            in("t0") BN254_SCALAR_MUL,
-            in("a0") &mut a,
-            in("a1") val,
-        );
-        core::arch::asm!(
-            "ecall",
-            in("t0") BN254_SCALAR_MUL,
-            in("a0") &mut a,
-            in("a1") val,
-        );
-        core::arch::asm!(
-            "ecall",
-            in("t0") BN254_SCALAR_MUL,
-            in("a0") &mut a,
-            in("a1") val,
-        );
-        core::arch::asm!(
-            "ecall",
-            in("t0") MEMCPY_32,
-            in("a0") &a,
-            in("a1") val,
-        );
+        // dst = 0
+        // dst += src
+        set_fr_zero(dst);
+        add_assign(dst, src);
+    }
+}
+
+#[inline(always)]
+pub(crate) fn mul_add_assign(a: &mut Fr, b: &Fr, c: &Fr) {
+    // let mut tmp = MaybeUninit::<Fr>::uninit();
+    // set_fr(tmp.as_mut_ptr(), b);
+    static mut TMP: Fr = Fr::ZERO;
+    unsafe {
+        set_fr(&mut TMP, b);
+        mul_assign(&mut TMP, c);
+        add_assign(a, &TMP);
+    }
+}
+
+
+#[inline(always)]
+pub(crate) fn sbox_inplace(val: &mut Fr) {
+    //let mut a = MaybeUninit::<Fr>::uninit();
+    static mut TMP: Fr = Fr::ZERO;
+    unsafe {
+        set_fr(&mut TMP, val);
+        mul_assign(&mut TMP, val);
+        mul_assign(&mut TMP, val);
+        mul_assign(&mut TMP, val);
+        mul_assign(&mut TMP, val);
+        set_fr(val, &TMP);
     };
 }
 
@@ -67,12 +82,7 @@ pub(crate) fn sbox_inplace(val: &mut Fr) {
 pub(crate) fn fill_state(state: &mut MaybeUninit<State>, val: &Fr) {
     for i in 0..T {
         unsafe {
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") val,
-                in("a1") (state.as_mut_ptr() as *mut Fr).add(i),
-            );
+            set_fr((state.as_mut_ptr() as *mut Fr).add(i), val);
         }
     }
 }
@@ -80,18 +90,9 @@ pub(crate) fn fill_state(state: &mut MaybeUninit<State>, val: &Fr) {
 #[inline(always)]
 pub(crate) fn set_state(state: &mut State, new_state: &State) {
     unsafe {
-        asm!(
-            "ecall",
-            in("t0") MEMCPY_64,
-            in("a0") &new_state[0],
-            in("a1") &mut state[0],
-        );
-        asm!(
-            "ecall",
-            in("t0") MEMCPY_32,
-            in("a0") &new_state[2],
-            in("a1") &mut state[2],
-        );
+        set_fr(&mut state[0], &new_state[0]);
+        set_fr(&mut state[1], &new_state[1]);
+        set_fr(&mut state[2], &new_state[2]);
     }
 }
 
@@ -101,70 +102,24 @@ pub(crate) fn init_state_with_cap_and_msg<'a>(
     cap: &Fr,
     msg: &[Fr],
 ) -> &'a mut State {
-    const ZERO_TWO: [Fr; 2] = [Fr::zero(), Fr::zero()];
 
     match msg.len() {
         0 => unsafe {
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") cap,
-                in("a1") (state.as_mut_ptr() as *mut Fr),
-            );
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_64,
-                in("a0") &ZERO_TWO,
-                in("a1") (state.as_mut_ptr() as *mut Fr).add(1),
-            );
+            set_fr(state.as_mut_ptr() as *mut Fr, cap);
+            set_fr_zero((state.as_mut_ptr() as *mut Fr).add(1));
+            set_fr_zero((state.as_mut_ptr() as *mut Fr).add(2));
         },
         1 => unsafe {
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") cap,
-                in("a1") (state.as_mut_ptr() as *mut Fr),
-            );
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") msg.as_ptr(),
-                in("a1") (state.as_mut_ptr() as *mut Fr).add(1),
-            );
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") &ZERO_TWO[1],
-                in("a1") (state.as_mut_ptr() as *mut Fr).add(2),
-            );
+            set_fr(state.as_mut_ptr() as *mut Fr, cap);
+            set_fr((state.as_mut_ptr() as *mut Fr).add(1), &msg[0]);
+            set_fr_zero((state.as_mut_ptr() as *mut Fr).add(2));
         },
         _ => unsafe {
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") cap,
-                in("a1") (state.as_mut_ptr() as *mut Fr),
-            );
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_64,
-                in("a0") msg.as_ptr(),
-                in("a1") (state.as_mut_ptr() as *mut Fr).add(1),
-            );
+            set_fr(state.as_mut_ptr() as *mut Fr, cap);
+            set_fr((state.as_mut_ptr() as *mut Fr).add(1), &msg[0]);
+            set_fr((state.as_mut_ptr() as *mut Fr).add(2), &msg[1]);
         },
     }
 
     unsafe { state.assume_init_mut() }
-}
-
-#[inline(always)]
-pub(crate) unsafe fn set_fr(dst: *mut Fr, val: &Fr) {
-    unsafe {
-        asm!(
-            "ecall",
-            in("t0") MEMCPY_32,
-            in("a0") val,
-            in("a1") dst,
-        );
-    }
 }
