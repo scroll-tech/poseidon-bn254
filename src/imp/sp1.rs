@@ -1,65 +1,22 @@
 use crate::{Fr, State, T};
-use core::arch::asm;
+use core::ptr::addr_of_mut;
 use std::mem::MaybeUninit;
-
-const MEMCPY_32: u32 = 0x00_00_01_30;
-const MEMCPY_64: u32 = 0x00_00_01_31;
-const BN254_SCALAR_MUL: u32 = 0x00_01_01_20;
-const BN254_SCALAR_MAC: u32 = 0x00_01_01_21;
-
-#[inline(always)]
-pub(crate) fn mul_add_assign(a: &mut Fr, b: &Fr, c: &Fr) {
-    unsafe {
-        asm!(
-            "ecall",
-            in("t0") BN254_SCALAR_MAC,
-            in("a0") a,
-            in("a1") &[b, c],
-        );
-    }
-}
+use sp1_intrinsics::{
+    bn254::syscall_bn254_scalar_mul,
+    memory::memcpy32,
+};
 
 #[inline(always)]
 pub(crate) fn sbox_inplace(val: &mut Fr) {
     let mut a = MaybeUninit::<Fr>::uninit();
 
     unsafe {
-        core::arch::asm!(
-            "ecall",
-            in("t0") MEMCPY_32,
-            in("a0") val,
-            in("a1") a.as_mut_ptr(),
-        );
-        core::arch::asm!(
-            "ecall",
-            in("t0") BN254_SCALAR_MUL,
-            in("a0") &mut a,
-            in("a1") val,
-        );
-        core::arch::asm!(
-            "ecall",
-            in("t0") BN254_SCALAR_MUL,
-            in("a0") &mut a,
-            in("a1") val,
-        );
-        core::arch::asm!(
-            "ecall",
-            in("t0") BN254_SCALAR_MUL,
-            in("a0") &mut a,
-            in("a1") val,
-        );
-        core::arch::asm!(
-            "ecall",
-            in("t0") BN254_SCALAR_MUL,
-            in("a0") &mut a,
-            in("a1") val,
-        );
-        core::arch::asm!(
-            "ecall",
-            in("t0") MEMCPY_32,
-            in("a0") &a,
-            in("a1") val,
-        );
+        memcpy32(&val.0, addr_of_mut!((*a.as_mut_ptr()).0));
+        syscall_bn254_scalar_mul(addr_of_mut!((*a.as_mut_ptr()).0), &val.0);
+        syscall_bn254_scalar_mul(addr_of_mut!((*a.as_mut_ptr()).0), &val.0);
+        syscall_bn254_scalar_mul(addr_of_mut!((*a.as_mut_ptr()).0), &val.0);
+        syscall_bn254_scalar_mul(addr_of_mut!((*a.as_mut_ptr()).0), &val.0);
+        memcpy32(&a.assume_init_ref().0, &mut val.0);
     };
 }
 
@@ -67,12 +24,7 @@ pub(crate) fn sbox_inplace(val: &mut Fr) {
 pub(crate) fn fill_state(state: &mut MaybeUninit<State>, val: &Fr) {
     for i in 0..T {
         unsafe {
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") val,
-                in("a1") (state.as_mut_ptr() as *mut Fr).add(i),
-            );
+            memcpy32(&val.0, addr_of_mut!((*(state.as_mut_ptr() as *mut Fr).add(i)).0));
         }
     }
 }
@@ -80,18 +32,9 @@ pub(crate) fn fill_state(state: &mut MaybeUninit<State>, val: &Fr) {
 #[inline(always)]
 pub(crate) fn set_state(state: &mut State, new_state: &State) {
     unsafe {
-        asm!(
-            "ecall",
-            in("t0") MEMCPY_64,
-            in("a0") &new_state[0],
-            in("a1") &mut state[0],
-        );
-        asm!(
-            "ecall",
-            in("t0") MEMCPY_32,
-            in("a0") &new_state[2],
-            in("a1") &mut state[2],
-        );
+        memcpy32(&new_state[0].0, &mut state[0].0);
+        memcpy32(&new_state[1].0, &mut state[1].0);
+        memcpy32(&new_state[2].0, &mut state[2].0);
     }
 }
 
@@ -101,70 +44,31 @@ pub(crate) fn init_state_with_cap_and_msg<'a>(
     cap: &Fr,
     msg: &[Fr],
 ) -> &'a mut State {
-    const ZERO_TWO: [Fr; 2] = [Fr::zero(), Fr::zero()];
+    static ZERO: Fr = Fr::zero();
 
-    match msg.len() {
-        0 => unsafe {
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") cap,
-                in("a1") (state.as_mut_ptr() as *mut Fr),
-            );
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_64,
-                in("a0") &ZERO_TWO,
-                in("a1") (state.as_mut_ptr() as *mut Fr).add(1),
-            );
-        },
-        1 => unsafe {
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") cap,
-                in("a1") (state.as_mut_ptr() as *mut Fr),
-            );
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") msg.as_ptr(),
-                in("a1") (state.as_mut_ptr() as *mut Fr).add(1),
-            );
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") &ZERO_TWO[1],
-                in("a1") (state.as_mut_ptr() as *mut Fr).add(2),
-            );
-        },
-        _ => unsafe {
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_32,
-                in("a0") cap,
-                in("a1") (state.as_mut_ptr() as *mut Fr),
-            );
-            asm!(
-                "ecall",
-                in("t0") MEMCPY_64,
-                in("a0") msg.as_ptr(),
-                in("a1") (state.as_mut_ptr() as *mut Fr).add(1),
-            );
-        },
+    unsafe {
+        memcpy32(&cap.0, addr_of_mut!((*state.as_mut_ptr())[0].0));
+        match msg.len() {
+            0 => {
+                memcpy32(&ZERO.0, addr_of_mut!((*state.as_mut_ptr())[1].0));
+                memcpy32(&ZERO.0, addr_of_mut!((*state.as_mut_ptr())[2].0));
+            },
+            1 => {
+                memcpy32(&msg[0].0, addr_of_mut!((*state.as_mut_ptr())[1].0));
+                memcpy32(&ZERO.0, addr_of_mut!((*state.as_mut_ptr())[2].0));
+            },
+            _ => {
+                memcpy32(&msg[0].0, addr_of_mut!((*state.as_mut_ptr())[1].0));
+                memcpy32(&msg[1].0, addr_of_mut!((*state.as_mut_ptr())[2].0));
+            },
+        }
+        state.assume_init_mut()
     }
-
-    unsafe { state.assume_init_mut() }
 }
 
 #[inline(always)]
 pub(crate) unsafe fn set_fr(dst: *mut Fr, val: &Fr) {
     unsafe {
-        asm!(
-            "ecall",
-            in("t0") MEMCPY_32,
-            in("a0") val,
-            in("a1") dst,
-        );
+        memcpy32(&val.0, addr_of_mut!((*dst).0));
     }
 }

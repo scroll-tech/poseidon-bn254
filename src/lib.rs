@@ -6,12 +6,7 @@ use itertools::Itertools;
 use std::mem::MaybeUninit;
 use std::ops::AddAssign;
 
-#[cfg(feature = "bn254")]
-pub use bn254::ff::{Field, PrimeField};
-#[cfg(feature = "halo2curves_v1")]
-pub use halo2curves_v1::ff::{Field, PrimeField};
-#[cfg(feature = "halo2curves_v3")]
-pub use halo2curves_v3::ff::{Field, PrimeField};
+pub use bn254::{ff::{Field, PrimeField}, Fr};
 
 mod constants;
 mod imp;
@@ -21,13 +16,6 @@ mod imp;
     feature = "zkvm-hint"
 ))]
 mod zkvm_hints;
-
-#[cfg(feature = "bn254")]
-pub use bn254::Fr;
-#[cfg(feature = "halo2curves_v1")]
-pub use halo2curves_v1::bn256::Fr;
-#[cfg(feature = "halo2curves_v3")]
-pub use halo2curves_v3::bn256::Fr;
 
 #[cfg(all(
     not(target_os = "zkvm"),
