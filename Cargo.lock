@@ -108,6 +108,7 @@ dependencies = [
 [[package]]
 name = "bn254"
 version = "0.1.0"
+source = "git+https://github.com/scroll-tech/bn254.git?branch=master#db67681f5e9ae1736565a48ec294a6d0dacb4e0d"
 dependencies = [
  "ff 0.13.0 (git+https://github.com/scroll-tech/ff?branch=feat/sp1)",
  "getrandom",
@@ -1073,6 +1074,7 @@ dependencies = [
 [[package]]
 name = "sp1-intrinsics"
 version = "0.0.0"
+source = "git+https://github.com/scroll-tech/sp1-intrinsics.git?branch=master#7e038e60db0b2e847f6d8f49e148ccac8c6fc394"
 dependencies = [
  "cfg-if",
 ]
