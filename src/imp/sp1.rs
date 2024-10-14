@@ -1,31 +1,28 @@
 use crate::{Fr, State, T};
-use core::ptr::addr_of_mut;
+use sp1_intrinsics::{bn254::syscall_bn254_scalar_mul, memory::memcpy32};
 use std::mem::MaybeUninit;
-use sp1_intrinsics::{
-    bn254::syscall_bn254_scalar_mul,
-    memory::memcpy32,
-};
 
 #[inline(always)]
 pub(crate) fn sbox_inplace(val: &mut Fr) {
-    let mut a = MaybeUninit::<[u32; 8]>::uninit();
+    let mut a = MaybeUninit::<Fr>::uninit();
 
     unsafe {
         let ptr = a.as_mut_ptr();
-        memcpy32(&val.0, ptr);
-        syscall_bn254_scalar_mul(ptr, &val.0);
-        syscall_bn254_scalar_mul(ptr, &val.0);
-        syscall_bn254_scalar_mul(ptr, &val.0);
-        syscall_bn254_scalar_mul(ptr, &val.0);
-        memcpy32(ptr, &mut val.0);
+        memcpy32(val, ptr);
+        syscall_bn254_scalar_mul(ptr, val);
+        syscall_bn254_scalar_mul(ptr, val);
+        syscall_bn254_scalar_mul(ptr, val);
+        syscall_bn254_scalar_mul(ptr, val);
+        memcpy32(ptr, val);
     };
 }
 
 #[inline(always)]
 pub(crate) fn fill_state(state: &mut MaybeUninit<State>, val: &Fr) {
+    let ptr = state.as_mut_ptr() as *mut Fr;
     for i in 0..T {
         unsafe {
-            memcpy32(&val.0, addr_of_mut!((*(state.as_mut_ptr().add(i) as *mut Fr)).0));
+            memcpy32(val, ptr.add(i));
         }
     }
 }
@@ -33,9 +30,9 @@ pub(crate) fn fill_state(state: &mut MaybeUninit<State>, val: &Fr) {
 #[inline(always)]
 pub(crate) fn set_state(state: &mut State, new_state: &State) {
     unsafe {
-        memcpy32(&new_state[0].0, &mut state[0].0);
-        memcpy32(&new_state[1].0, &mut state[1].0);
-        memcpy32(&new_state[2].0, &mut state[2].0);
+        memcpy32(&new_state[0], &mut state[0]);
+        memcpy32(&new_state[1], &mut state[1]);
+        memcpy32(&new_state[2], &mut state[2]);
     }
 }
 
@@ -49,20 +46,20 @@ pub(crate) fn init_state_with_cap_and_msg<'a>(
 
     unsafe {
         let ptr = state.as_mut_ptr() as *mut Fr;
-        memcpy32(&cap.0, addr_of_mut!((*ptr).0));
+        memcpy32(cap, ptr);
         match msg.len() {
             0 => {
-                memcpy32(&ZERO.0, addr_of_mut!((*(ptr.add(1))).0));
-                memcpy32(&ZERO.0, addr_of_mut!((*(ptr.add(2))).0));
-            },
+                memcpy32(&ZERO, ptr.add(1));
+                memcpy32(&ZERO, ptr.add(2));
+            }
             1 => {
-                memcpy32(&msg[0].0, addr_of_mut!((*(ptr.add(1))).0));
-                memcpy32(&ZERO.0,   addr_of_mut!((*(ptr.add(2))).0));
-            },
+                memcpy32(&msg[0], ptr.add(1));
+                memcpy32(&ZERO, ptr.add(2));
+            }
             _ => {
-                memcpy32(&msg[0].0, addr_of_mut!((*(ptr.add(1))).0));
-                memcpy32(&msg[1].0, addr_of_mut!((*(ptr.add(2))).0));
-            },
+                memcpy32(&msg[0], ptr.add(1));
+                memcpy32(&msg[1], ptr.add(2));
+            }
         }
         state.assume_init_mut()
     }
@@ -71,6 +68,6 @@ pub(crate) fn init_state_with_cap_and_msg<'a>(
 #[inline(always)]
 pub(crate) unsafe fn set_fr(dst: *mut Fr, val: &Fr) {
     unsafe {
-        memcpy32(&val.0, addr_of_mut!((*dst).0));
+        memcpy32(val, dst);
     }
 }

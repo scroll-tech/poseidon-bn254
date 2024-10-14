@@ -1,21 +1,17 @@
 use crate::{Fr, State, FULL_ROUNDS, MDS, PARTIAL_ROUNDS, ROUND_CONSTANTS, T};
+use bn254::ff::MulAddAssign;
 use std::mem::MaybeUninit;
 use std::ops::{AddAssign, MulAssign};
-use bn254::ff::MulAddAssign;
 
 #[cfg(not(all(target_os = "zkvm", target_vendor = "succinct")))]
 mod host;
 #[cfg(not(all(target_os = "zkvm", target_vendor = "succinct")))]
-pub(crate) use host::{
-    fill_state, init_state_with_cap_and_msg, sbox_inplace, set_fr, set_state,
-};
+pub(crate) use host::{fill_state, init_state_with_cap_and_msg, sbox_inplace, set_fr, set_state};
 
 #[cfg(all(target_os = "zkvm", target_vendor = "succinct"))]
 mod sp1;
 #[cfg(all(target_os = "zkvm", target_vendor = "succinct"))]
-pub(crate) use sp1::{
-    fill_state, init_state_with_cap_and_msg, sbox_inplace, set_fr, set_state,
-};
+pub(crate) use sp1::{fill_state, init_state_with_cap_and_msg, sbox_inplace, set_fr, set_state};
 
 #[inline(always)]
 pub fn permute(state: &mut State) {

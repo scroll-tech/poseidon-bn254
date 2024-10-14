@@ -6,7 +6,10 @@ use itertools::Itertools;
 use std::mem::MaybeUninit;
 use std::ops::AddAssign;
 
-pub use bn254::{ff::{Field, PrimeField}, Fr};
+pub use bn254::{
+    ff::{Field, PrimeField},
+    Fr,
+};
 
 mod constants;
 mod imp;
