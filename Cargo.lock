@@ -108,12 +108,13 @@ dependencies = [
 [[package]]
 name = "bn254"
 version = "0.1.0"
-source = "git+https://github.com/scroll-tech/bn254#968936395106cb609832894c69d127ee7c93ad4a"
+source = "git+https://github.com/scroll-tech/bn254.git?branch=master#db67681f5e9ae1736565a48ec294a6d0dacb4e0d"
 dependencies = [
  "ff 0.13.0 (git+https://github.com/scroll-tech/ff?branch=feat/sp1)",
  "getrandom",
  "rand",
  "rand_core",
+ "sp1-intrinsics",
  "subtle",
 ]
 
@@ -465,24 +466,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "halo2curves"
-version = "0.3.3"
-source = "git+https://github.com/scroll-tech/halo2curves.git?branch=base-0.3.3#8e4cb9f0c66c864e8ca25da07f50ae95f664a5b7"
-dependencies = [
- "ff 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "group",
- "lazy_static",
- "num-bigint",
- "num-traits",
- "pasta_curves",
- "paste",
- "rand",
- "rand_core",
- "static_assertions",
- "subtle",
-]
-
-[[package]]
 name = "hashbrown"
 version = "0.14.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -764,7 +747,7 @@ version = "0.1.0"
 source = "git+https://github.com/scroll-tech/poseidon-circuit?branch=main#7b96835c6201afdbfaf3d13d641efbaaf5db2d20"
 dependencies = [
  "bitvec",
- "halo2curves 0.1.0",
+ "halo2curves",
  "lazy_static",
 ]
 
@@ -774,10 +757,9 @@ version = "0.1.0"
 dependencies = [
  "bn254",
  "ethers-core",
- "halo2curves 0.1.0",
- "halo2curves 0.3.3",
  "itertools",
  "poseidon-base",
+ "sp1-intrinsics",
  "sp1-lib",
 ]
 
@@ -1080,14 +1062,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "snowbridge-amcl"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "460a9ed63cdf03c1b9847e8a12a5f5ba19c4efd5869e4a737e05be25d7c427e5"
+dependencies = [
+ "parity-scale-codec",
+ "scale-info",
+]
+
+[[package]]
+name = "sp1-intrinsics"
+version = "0.0.0"
+source = "git+https://github.com/scroll-tech/sp1-intrinsics.git?branch=master#7e038e60db0b2e847f6d8f49e148ccac8c6fc394"
+dependencies = [
+ "cfg-if",
+]
+
+[[package]]
 name = "sp1-lib"
-version = "1.1.0"
-source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0803#5e39747fe0b7c287e31f87a65bd20155d168fe81"
+version = "2.0.0"
+source = "git+https://github.com/scroll-tech/sp1.git?branch=scroll-dev-0830#bc5b34fee2fbaefb804a585b9764e652f804b627"
 dependencies = [
  "anyhow",
  "bincode",
  "cfg-if",
+ "hex",
  "serde",
+ "snowbridge-amcl",
 ]
 
 [[package]]

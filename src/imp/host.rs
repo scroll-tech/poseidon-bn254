@@ -2,11 +2,6 @@ use crate::{Fr, State, T};
 use std::mem::MaybeUninit;
 
 #[inline(always)]
-pub(crate) fn mul_add_assign(a: &mut Fr, b: &Fr, c: &Fr) {
-    *a += b * c;
-}
-
-#[inline(always)]
 fn sbox(val: Fr) -> Fr {
     let a = val.square();
     let b = a.square();
