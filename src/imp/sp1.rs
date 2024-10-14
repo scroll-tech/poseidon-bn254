@@ -1,5 +1,5 @@
 use crate::{Fr, State, T};
-use sp1_intrinsics::{bn254::syscall_bn254_scalar_mul, memory::memcpy32};
+use sp1_intrinsics::{bn254::syscall_bn254_scalar_mul, memory::{memcpy32, memcpy64}};
 use std::mem::MaybeUninit;
 
 #[inline(always)]
@@ -42,23 +42,21 @@ pub(crate) fn init_state_with_cap_and_msg<'a>(
     cap: &Fr,
     msg: &[Fr],
 ) -> &'a mut State {
-    static ZERO: Fr = Fr::zero();
+    static ZERO_TWO: [Fr; 2] = [Fr::zero(), Fr::zero()];
 
     unsafe {
         let ptr = state.as_mut_ptr() as *mut Fr;
         memcpy32(cap, ptr);
         match msg.len() {
             0 => {
-                memcpy32(&ZERO, ptr.add(1));
-                memcpy32(&ZERO, ptr.add(2));
+                memcpy64(ZERO_TWO.as_ptr(), ptr.add(1));
             }
             1 => {
-                memcpy32(&msg[0], ptr.add(1));
-                memcpy32(&ZERO, ptr.add(2));
+                memcpy32(msg.as_ptr(), ptr.add(1));
+                memcpy32(ZERO_TWO.as_ptr(), ptr.add(2));
             }
             _ => {
-                memcpy32(&msg[0], ptr.add(1));
-                memcpy32(&msg[1], ptr.add(2));
+                memcpy64(msg.as_ptr(), ptr.add(1));
             }
         }
         state.assume_init_mut()
