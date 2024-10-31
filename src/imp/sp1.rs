@@ -1,5 +1,8 @@
 use crate::{Fr, State, T};
-use sp1_intrinsics::{bn254::syscall_bn254_scalar_mul, memory::{memcpy32, memcpy64}};
+use sp1_intrinsics::{
+    bn254::{syscall_bn254_scalar_mac, syscall_bn254_scalar_mul},
+    memory::{memcpy32, memcpy64},
+};
 use std::mem::MaybeUninit;
 
 #[inline(always)]
@@ -67,5 +70,12 @@ pub(crate) fn init_state_with_cap_and_msg<'a>(
 pub(crate) unsafe fn set_fr(dst: *mut Fr, val: &Fr) {
     unsafe {
         memcpy32(val, dst);
+    }
+}
+
+#[inline(always)]
+pub(crate) fn mul_add_assign(dst: &mut Fr, a: &Fr, b: &Fr) {
+    unsafe {
+        syscall_bn254_scalar_mac(dst, a, b);
     }
 }

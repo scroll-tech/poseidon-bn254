@@ -44,3 +44,8 @@ pub(crate) fn init_state_with_cap_and_msg<'a>(
 pub(crate) unsafe fn set_fr(dst: *mut Fr, val: &Fr) {
     dst.write(*val);
 }
+
+#[inline(always)]
+pub(crate) fn mul_add_assign(dst: &mut Fr, a: &Fr, b: &Fr) {
+    *dst += a * b;
+}
